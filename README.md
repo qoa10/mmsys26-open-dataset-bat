@@ -110,33 +110,91 @@ Before running, edit each script and update:
 
 ## Script Overview
 
-### finaldetect.py (recommended)
+### `finaldetect.py` (recommended)
 
-End-to-end **video analysis**:
+End-to-end **video detection + analysis** pipeline (MOG2 + YOLOv8), designed for reproducible reporting.
 
-* MOG2 motion detection + stride-based triggering
-* YOLOv8 inference on triggered frames
-* Saves structured outputs (CSV) and summary metrics
-* Can generate plots (depending on your version)
+* **Motion gating (MOG2)** to decide whether a frame should be analyzed (reduces unnecessary inference).
+* **Stride-based triggering**: runs YOLOv8 only every *N* frames (configurable) when motion is present.
+* Performs **YOLOv8 inference on triggered frames** and records per-trigger results:
 
-### video_mog2+yolov8.py
+  * timestamp / frame index
+  * number of detections (bat_count)
+  * confidence statistics (mean / max)
+  * optional condition label (e.g., baseline vs. device-enabled)
+* Saves **structured outputs** for analysis and paper writing:
 
-Lightweight **video inference**:
+  * `detections.csv` (per-trigger records)
+  * summary metrics (`video_metrics.txt`)
+  * aggregated tables (minute-bin statistics, trends)
+* Generates **publication-ready figures** (PNG + PDF), e.g.:
 
-* Motion gating (MOG2) + YOLO stride inference
-* Writes an annotated output video + runtime summary
+  * histogram of detections per frame
+  * minute-level trends
+  * cumulative bat-minutes curve (depending on the enabled plotting section)
 
-### yolov8m.py
+Recommended when you want **CSV + plots + final metrics** aligned with the paper.
 
-YOLO-only **baseline inference** (no MOG2 gating), used for comparison.
+---
 
-### test_mog2+yolov8m.py
+### `video_mog2+yolov8.py`
 
-**Image-set evaluation**:
+Lightweight **video inference** script for fast qualitative testing and runtime comparison.
 
-* Loads YOLO-format GT labels
-* Runs YOLOv8 and matches with GT using IoU threshold
-* Computes Precision / Recall / F1 and saves annotated images
+* Uses **MOG2 motion detection** to gate inference (only run YOLO when motion is detected).
+* Uses a configurable **frame stride** (e.g., every 3 frames) to further reduce compute.
+* Writes an **annotated output video** (`annotated_video.mp4`) with predicted boxes and labels.
+* Writes a concise runtime summary (`video_metrics.txt`), including:
+
+  * total frames read
+  * YOLO triggered frames
+  * total detections on triggered frames
+  * total / average inference time
+
+Recommended when you mainly need **an annotated video output** plus basic speed statistics.
+
+---
+
+### `yolov8m.py` (training)
+
+YOLOv8 **training script** for this dataset. It provides **two training variants**:
+
+* **Variant A (commented template):** a clean starter template for training `yolov8m.pt` from scratch, with conservative settings (useful if you want a minimal baseline or you already performed offline augmentation). 
+* **Variant B (active code):** continues training by **loading a previous `best.pt` checkpoint** and running a new training job with updated hyperparameters and Ultralytics augmentations enabled. 
+
+**Key configurable parameters (edit in the script):**
+
+* `data`: path to `data.yaml`
+* `epochs`, `imgsz`, `batch`
+* `device`: set to `"mps"` for Apple Silicon acceleration (or `"cpu"` / CUDA device id)
+* augmentation knobs such as `mosaic`, `close_mosaic`, HSV jitter (`hsv_h`, `hsv_s`, `hsv_v`), `translate`, `scale`, `fliplr`
+* run/output management: `project`, `name`, `save_period`, `patience`, `workers` 
+
+**Important notes:**
+
+* This script currently uses **absolute paths**; you must update them before running.
+* The active variant loads `best.pt` as initialization. Since `resume=False`, it **loads weights but does not resume** optimizer/epoch state (i.e., it starts a fresh run initialized from those weights). 
+
+---
+
+### `test_mog2+yolov8m.py`
+
+Image-set **evaluation** script (YOLO labels + IoU matching) for quantitative testing on the labeled split.
+
+* Loads images from `images/test` and GT labels from `labels/test` (YOLO `.txt` format).
+* Runs YOLOv8 prediction on each image and matches predictions to GT using an **IoU threshold**.
+* Computes standard detection metrics:
+
+  * Precision / Recall / F1
+  * average inference time per image
+* Saves **annotated images** (predicted boxes drawn) into `save_dir`.
+* Outputs a `metrics.txt` summary with counts and final metrics.
+
+Note:
+
+* If your current version forces inference on every image (e.g., `do_infer = True`), then MOG2 is **not used to skip inference** and functions mainly as an optional motion-mask component. If you enable gating, evaluation metrics should account for skipped images accordingly.
+
+Recommended when you need **PR/F1 numbers** on the labeled image test set.
 
 ---
 
