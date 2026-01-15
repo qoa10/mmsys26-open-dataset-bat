@@ -1,113 +1,158 @@
+````markdown
 # mmsys26-open-dataset-bat
 
-Open bat detection dataset with annotated images and 19 raw videos, plus metadata and baseline code for reproducible experiments.
+Open bat detection dataset with **annotated images (YOLO format)**, **19 raw videos**, and **baseline scripts** (MOG2 + YOLOv8) for reproducible experiments.
 
 ---
 
-## Dataset Download (Google Drive)
+## Quick Links
 
-**Google Drive link:**  
-https://drive.google.com/drive/folders/1Q2BjR5mpYaQoZ7F73QW6Xd7n1Y_hJ88c?dmr=1&ec=wgc-drive-hero-goto
+- **Dataset (Google Drive):**  
+  https://drive.google.com/drive/folders/1Q2BjR5mpYaQoZ7F73QW6Xd7n1Y_hJ88c?dmr=1&ec=wgc-drive-hero-goto
+
+---
+
+## Dataset Contents
 
 The Drive folder contains two zip files:
 
-- `Bat Images.zip` — annotated images for **YOLO object detection**
-- `Bat Videos.zip` — **19 raw videos** (unlabeled) for future labeling, benchmarking, or testing
+- **`Bat Images.zip`** — labeled images for **YOLO object detection**
+- **`Bat Videos.zip`** — **19 raw videos** (unlabeled)
 
 ---
 
-## Bat Images (Annotated YOLO Dataset)
+## Bat Images (YOLO Labeled)
 
-After unzipping `Bat Images.zip`, you will see:
+After extracting `Bat Images.zip`, the dataset follows the standard YOLO layout:
 
-- `data.yaml`
-- `images/`
-- `labels/`
+```text
+Bat Images/
+  data.yaml
+  images/
+    train/
+    val/
+    test/
+  labels/
+    train/
+    val/
+    test/
+````
+
+### Splits (as reported in the paper)
+
+* **train:** 5010
+* **val:** 286
+* **test:** 144
+
+> The train split is larger because it includes augmented images.
 
 ### `data.yaml`
 
-This file is required for training YOLO models. It contains:
-- dataset paths
-- class labels
+* Required for YOLO training (paths + class names).
+* You may need to **update the dataset root path** inside `data.yaml` based on your local location.
+* Please **do not change** class label names/order.
 
-**Important:**
-- Please **do not change the class label names/order**.
-- You may need to **update the dataset path** in `data.yaml` based on your local directory.
+### Augmented vs. Original Images (optional)
 
-### Directory Structure
+* **Original:** filenames start with `frame...`
+* **Augmented:** filenames use prefixes (e.g., `blurred_frame...`, `dark_frame...`)
 
-The dataset follows the standard YOLO layout:
-Bat Images/
-data.yaml
-images/
-train/
-val/
-test/
-labels/
-train/
-val/
-test/
-
-
-### Split Sizes
-
-The split sizes match the paper:
-
-- `train`: **5010**
-- `val`: **286**
-- `test`: **144**
-
-The training set is larger because it includes **augmented images**.
-
-### Augmented vs. Original Images
-
-- **Original images** use filenames starting with `frame...` (no augmentation prefix).
-- **Augmented images** use filenames with prefixes such as:
-  - `blurred_frame...`
-  - `dark_frame...`
-  - (other augmentation-method prefixes)
-
-Naming convention:
-
-- `<augmentation_method> + <original_filename>`
-
-If you want to train only on the original data, select files starting with `frame...` and use the corresponding label files.
+If you want only original data, filter images starting with `frame...` and keep the matching label files.
 
 ### Labels
 
-- Labels are provided as **YOLO `.txt` files** under `labels/`.
-- Annotations are **bounding boxes** (object detection), **not segmentation**.
-
-If you require another format (e.g., COCO JSON), please convert the YOLO labels using your preferred conversion tool.
+* YOLO `.txt` bounding boxes under `labels/` (object detection, not segmentation).
+* If you need COCO JSON or other formats, convert from YOLO using your preferred tool.
 
 ---
 
-## Bat Videos (Raw Videos)
+## Bat Videos (Raw)
 
-After unzipping `Bat Videos.zip`, you will find **19 videos**:
+After extracting `Bat Videos.zip`, you will find **19 raw videos**:
 
-- **18 standard videos** (visible-light recordings)
-  - Naming format: **location + date**
-  - Suffixes like `..._1`, `..._2`, `..._3` indicate **multiple segments from the same location/session**.
+* Mostly visible-light recordings; filenames use **location + date**
+* Suffixes like `_1`, `_2`, `_3` indicate multiple segments from the same session
+* Includes **one infrared video** as an additional cross-sensor test case
 
-- **1 infrared video**
-  - Included as an additional test case using a different acquisition strategy.
-  - Provided for comparison if you are interested in cross-sensor generalization.
-
-### Notes on the Videos
-
-- These videos are **raw data** and have **no annotations**.
-- They can be used for:
-  - creating new annotations
-  - testing trained models
-  - future video-based detection/tracking research
+> Videos are **unlabeled** and intended for benchmarking, testing trained models, or future labeling.
 
 ---
 
-## Notes / Support
+## Baseline Code (MOG2 + YOLOv8)
 
-- This repository provides the official dataset structure and usage guidance aligned with our paper.
-- If you encounter any access or download issues with the Google Drive link, please open an issue in this repository.
+This repository includes baseline scripts for:
 
+* **Video inference** with motion gating (MOG2) + YOLOv8
+* **Image-set evaluation** with YOLO labels and IoU matching
 
+### Environment
 
+* **Python:** 3.9+
+* **Recommended IDE:** VS Code or PyCharm
+
+### Install Dependencies
+
+```bash
+pip install ultralytics opencv-python numpy pandas matplotlib torch
+```
+
+> For GPU acceleration, install the CUDA-matching PyTorch build from the official PyTorch site.
+
+### Important: Update Paths Before Running
+
+All scripts currently use **absolute paths** (e.g., `/Users/...`).
+Before running, edit each script and update:
+
+* `video_path` / `img_dir` / `label_dir`
+* `model_path`
+* `save_dir`
+
+---
+
+## Script Overview
+
+### `finaldetect.py` (recommended)
+
+End-to-end **video analysis**:
+
+* MOG2 motion detection + stride-based triggering
+* YOLOv8 inference on triggered frames
+* Saves structured outputs (CSV) and summary metrics
+* Can generate plots (depending on your version)
+
+### `video_mog2+yolov8.py`
+
+Lightweight **video inference** script:
+
+* Motion gating (MOG2) + YOLO stride inference
+* Writes an annotated output video + runtime summary
+
+### `yolov8m.py`
+
+YOLO-only **baseline inference** (no MOG2 gating), used for comparison.
+
+### `test_mog2+yolov8m.py`
+
+**Image-set evaluation**:
+
+* Loads YOLO-format GT labels
+* Runs YOLOv8 and matches with GT using IoU threshold
+* Computes Precision / Recall / F1 and saves annotated images
+
+---
+
+## Run Example
+
+```bash
+python finaldetect.py
+```
+
+---
+
+## Support
+
+If you have issues accessing the Drive link or downloading the dataset, please open a GitHub issue.
+
+```
+::contentReference[oaicite:0]{index=0}
+```
