@@ -22,20 +22,36 @@ The Drive folder contains two zip files:
 
 ## Sample Visualizations
 
-Below are two example samples from **BAT-SV-2025** to illustrate typical scenes and bat appearance/scale in the dataset.
+<figure>
+  <p align="center">
+    <a href="picture/bat_place.png">
+      <img src="picture/bat_place.png" width="950" alt="Continuous-frame examples: bats are hard to recognize from a single frame">
+    </a>
+  </p>
+  <figcaption>
+    <b>Figure 1. Continuous-frame examples (why temporal context matters).</b>
+    In many scenes, bats are difficult to recognize from a single frame due to small size, motion blur, and low contrast.
+    Using consecutive frames provides stronger evidence for detection.
+    The location name shown in the <b>bottom-right</b> of each sub-image corresponds to the recording site.
+  </figcaption>
+</figure>
 
-<p align="center">
-  <a href="picture/bat_place.png">
-    <img src="picture/bat_place.png" width="900" alt="Sample: acquisition scene / placement">
-  </a>
-</p>
+<br>
 
-<p align="center">
-  <a href="picture/shapebat.png">
-    <img src="picture/shapebat.png" width="900" alt="Sample: bat appearance / shape example">
-  </a>
-</p>
----
+<figure>
+  <p align="center">
+    <a href="picture/shapebat.png">
+      <img src="picture/shapebat.png" width="950" alt="Shape diversity examples: bats appear different under varying viewpoints">
+    </a>
+  </p>
+  <figcaption>
+    <b>Figure 2. Shape diversity examples (viewpoint-dependent appearance).</b>
+    Bat appearance varies substantially across different viewpoints and flight poses, leading to diverse shapes and aspect ratios.
+    This variability motivates robust detection under orientation and scale changes.
+  </figcaption>
+</figure>
+
+
 
 ## Bat Images (YOLO Labeled)
 
