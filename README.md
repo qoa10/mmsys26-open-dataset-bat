@@ -1,4 +1,4 @@
-# mmsys26-open-dataset-bat
+# BAT-SV-2025
 
 Open bat detection dataset with **annotated images (YOLO format)**, **19 raw videos**, and **baseline scripts** (MOG2 + YOLOv8) for reproducible experiments.
 
