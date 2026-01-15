@@ -110,6 +110,46 @@ After extracting `Bat Videos.zip`, you will find **19 raw videos**:
 
 ---
 
+## Training & Validation Snapshots
+
+<figure>
+  <p align="center">
+    <a href="picture/train_batch0.jpg">
+      <img src="picture/train_batch0.jpg" width="950" alt="Training batch visualization">
+    </a>
+  </p>
+  <figcaption>
+    <b>Figure 3. Training batch visualization.</b> Example training batch sampled from the YOLO dataloader.
+  </figcaption>
+</figure>
+
+<br>
+
+<figure>
+  <p align="center">
+    <a href="picture/val_batch1_labels.jpg">
+      <img src="picture/val_batch1_labels.jpg" width="950" alt="Validation batch with ground-truth labels">
+    </a>
+  </p>
+  <figcaption>
+    <b>Figure 4. Validation batch (ground-truth labels).</b> Visualization of annotated bounding boxes on a validation batch.
+  </figcaption>
+</figure>
+
+<br>
+
+<figure>
+  <p align="center">
+    <a href="picture/val_batch1_pred.jpg">
+      <img src="picture/val_batch1_pred.jpg" width="950" alt="Validation batch with model predictions">
+    </a>
+  </p>
+  <figcaption>
+    <b>Figure 5. Validation batch (model predictions).</b> YOLOv8 prediction results on the same validation batch for qualitative comparison.
+  </figcaption>
+</figure>
+
+
 ## Baseline Code (MOG2 + YOLOv8)
 
 This repository includes baseline scripts for:
