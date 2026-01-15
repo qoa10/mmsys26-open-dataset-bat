@@ -6,8 +6,8 @@ Open bat detection dataset with **annotated images (YOLO format)**, **19 raw vid
 
 ## Quick Links
 
-- **Dataset (Google Drive):**  
-  https://drive.google.com/drive/folders/1Q2BjR5mpYaQoZ7F73QW6Xd7n1Y_hJ88c?dmr=1&ec=wgc-drive-hero-goto
+* **Dataset (Google Drive):**
+  [https://drive.google.com/drive/folders/1Q2BjR5mpYaQoZ7F73QW6Xd7n1Y_hJ88c?dmr=1&ec=wgc-drive-hero-goto](https://drive.google.com/drive/folders/1Q2BjR5mpYaQoZ7F73QW6Xd7n1Y_hJ88c?dmr=1&ec=wgc-drive-hero-goto)
 
 ---
 
@@ -15,8 +15,8 @@ Open bat detection dataset with **annotated images (YOLO format)**, **19 raw vid
 
 The Drive folder contains two zip files:
 
-- **`Bat Images.zip`** — labeled images for **YOLO object detection**
-- **`Bat Videos.zip`** — **19 raw videos** (unlabeled)
+* **Bat Images.zip** — labeled images for **YOLO object detection**
+* **Bat Videos.zip** — **19 raw videos** (unlabeled)
 
 ---
 
@@ -24,7 +24,7 @@ The Drive folder contains two zip files:
 
 After extracting `Bat Images.zip`, the dataset follows the standard YOLO layout:
 
-```text
+```
 Bat Images/
   data.yaml
   images/
@@ -35,6 +35,7 @@ Bat Images/
     train/
     val/
     test/
+```
 
 ### Splits (as reported in the paper)
 
@@ -44,7 +45,7 @@ Bat Images/
 
 > The train split is larger because it includes augmented images.
 
-### `data.yaml`
+### data.yaml
 
 * Required for YOLO training (paths + class names).
 * You may need to **update the dataset root path** inside `data.yaml` based on your local location.
@@ -90,7 +91,7 @@ This repository includes baseline scripts for:
 
 ### Install Dependencies
 
-```bash
+```
 pip install ultralytics opencv-python numpy pandas matplotlib torch
 ```
 
@@ -109,7 +110,7 @@ Before running, edit each script and update:
 
 ## Script Overview
 
-### `finaldetect.py` (recommended)
+### finaldetect.py (recommended)
 
 End-to-end **video analysis**:
 
@@ -118,18 +119,18 @@ End-to-end **video analysis**:
 * Saves structured outputs (CSV) and summary metrics
 * Can generate plots (depending on your version)
 
-### `video_mog2+yolov8.py`
+### video_mog2+yolov8.py
 
-Lightweight **video inference** script:
+Lightweight **video inference**:
 
 * Motion gating (MOG2) + YOLO stride inference
 * Writes an annotated output video + runtime summary
 
-### `yolov8m.py`
+### yolov8m.py
 
 YOLO-only **baseline inference** (no MOG2 gating), used for comparison.
 
-### `test_mog2+yolov8m.py`
+### test_mog2+yolov8m.py
 
 **Image-set evaluation**:
 
@@ -141,7 +142,7 @@ YOLO-only **baseline inference** (no MOG2 gating), used for comparison.
 
 ## Run Example
 
-```bash
+```
 python finaldetect.py
 ```
 
@@ -151,6 +152,5 @@ python finaldetect.py
 
 If you have issues accessing the Drive link or downloading the dataset, please open a GitHub issue.
 
-```
-::contentReference[oaicite:0]{index=0}
-```
+---
+
