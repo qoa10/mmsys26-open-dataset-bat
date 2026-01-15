@@ -20,6 +20,23 @@ The Drive folder contains two zip files:
 
 ---
 
+## Sample Visualizations
+
+Below are two example samples from **BAT-SV-2025** to illustrate typical scenes and bat appearance/scale in the dataset.
+
+<p align="center">
+  <a href="picture/bat_place.png">
+    <img src="picture/bat_place.png" width="900" alt="Sample: acquisition scene / placement">
+  </a>
+</p>
+
+<p align="center">
+  <a href="picture/shapebat.png">
+    <img src="picture/shapebat.png" width="900" alt="Sample: bat appearance / shape example">
+  </a>
+</p>
+---
+
 ## Bat Images (YOLO Labeled)
 
 After extracting `Bat Images.zip`, the dataset follows the standard YOLO layout:
